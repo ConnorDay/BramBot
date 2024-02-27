@@ -15,7 +15,9 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    command, args = message.content.split(" ",1)
+    message_split = message.content.split(" ",1)
+    command = message_split[0]
+    args = message_split[1:]
     if message.channel.type == "text":
         if not command.startswith("/"):
             return
