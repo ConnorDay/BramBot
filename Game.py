@@ -3,12 +3,14 @@ from Player.Dracula import Dracula
 from Player.Player import Player
 from Player.Renfield import Renfield
 from Player.Vampire import Vampire
+from Deck import Deck
 
 class Game:
     def __init__(self):
         self.players = []
         self.started = False
         self.moderator = None
+        self.deck = Deck()
 
     async def addPlayer( self, player ):
         if self.started:
@@ -48,3 +50,5 @@ class Game:
 
         self.started = True
         await self.moderator.send("\n".join(lines))
+
+        self.deck.create()
