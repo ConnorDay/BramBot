@@ -1,10 +1,14 @@
 import discord
+import re
 from dotenv import dotenv_values
+from Game import Game
 
 intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
+
+game = Game()
 
 @client.event
 async def on_ready():
@@ -15,18 +19,36 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    message_split = message.content.split(" ",1)
+    message_split = message.content.split(" ")
     command = message_split[0]
     args = message_split[1:]
-    if message.channel.type == "text":
+    if message.channel.type == discord.ChannelType.text:
         if not command.startswith("/"):
             return
         command = command[1:]
+        print(f"found command {command} with args {args}")
 
         if command == "start":
-            print(len(command.mentions))
+            if game.started:
+                message.channel.send("Game already started")
+                return
 
-    elif message.channel.type == "private":
+            users = []
+            for mention in args:
+                match = re.match(r"<@!?(\d+)>", mention)
+                if not match:
+                    message.channel.send(f"Could not parse: {mention}")
+                    return
+                
+                id = int(match[1])
+                user = discord.utils.find( lambda u: u.id == id, message.mentions)
+                await game.addPlayer(user)
+
+            await game.start(message.author)
+
+
+
+    elif message.channel.type == discord.ChannelType.private:
         print(args)
 
 config = dotenv_values(".env")
