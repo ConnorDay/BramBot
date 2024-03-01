@@ -159,3 +159,16 @@ class Game:
         self.players.insert(player.id - 1, Vampire(player.user, player.id))
 
         await self.promptModerator()
+
+    async def Cure(self, player_id: int):
+        player: Player = discord.utils.find( lambda p: p.id == player_id, self.players)
+        if player.is_vampire and not player.is_dracula:
+            self.players.remove(player)
+            self.players.insert(player.id - 1, Player(player.user, player.id))
+
+            await self.announcement_channel.send(f"{player.user.display_name} was successfully Cured!")
+        else:
+            await self.announcement_channel.send(f"{player.user.display_name} was not Cured!")
+
+        await self.promptModerator()
+
