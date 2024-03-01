@@ -30,6 +30,8 @@ class Moderator(View):
             view = Cure(game=self.game)
         elif command == "Add Card":
             view = AddCard(game=self.game)
+        elif command == "Stop Game":
+            await self.game.Stop()
 
         if view != None:
             await interaction.response.send_message(view.message, view=view)

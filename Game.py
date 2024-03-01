@@ -90,6 +90,21 @@ class Game:
 
         await self.promptModerator()
 
+    async def Stop(self):
+        old_announce = self.announcement_channel
+
+        self.players = []
+        self.started = False
+        self.moderator = None
+        self.deck = Deck()
+        self.announcement_channel = None
+
+        self.charm_next_human = False
+        self.has_charm = True
+
+        await old_announce.send("Game stopped.")
+
+
     async def Author(self, player_id: int):
         player: Player = discord.utils.find( lambda p: p.id == player_id, self.players)
 
