@@ -7,6 +7,7 @@ from Player.Vampire import Vampire
 from Deck import Deck
 from ModeratorViews.Moderator import Moderator
 from PlayerViews.Manipulate import Manipulate
+from PlayerViews.Narrator import Narrator
 
 class Game:
     def __init__(self):
@@ -94,22 +95,59 @@ class Game:
         top_card = self.deck.draw[0]
         await player.send(f"You have been selected as an Author!\nThis is the top card: [{player.parseCardAsAuthor(top_card)}]")
 
+    async def Narrator(self, player_id: int, is_blind):
+        player: Player = discord.utils.find( lambda p: p.id == player_id, self.players)
+
+        first_card = self.deck.draw[0]
+        first_card_string = player.parseCardAsNarrator( first_card, is_blind=is_blind )
+        second_card = self.deck.draw[1]
+        second_card_string = player.parseCardAsNarrator(second_card, is_blind=is_blind)
+
+        charmed=False
+        if self.charm_next_human:
+            charmed=True
+            if player.is_vampire:
+                charmed=False
+                if player.is_dracula:
+                    self.charm_next_human = False
+                    self.has_charm = True
+
+        await player.send(f"You have been selected as the Narrator!\nThis is the first card (what the Author saw):\n\n[{first_card_string}]\n\nThis is the second card (no one has seen this):\n\n[{second_card_string}]\n\n\n{'You are Charmed! you must choose the first card.' if charmed else 'Choose which card to play!'}", view=Narrator(first_card, second_card, charmed=charmed, game=self))
+
+    async def NarratorResponse(self, played_card=None, discarded=None):
+        assert played_card is not None
+        assert discarded is not None
+
+        self.deck.draw.remove(played_card)
+        self.deck.draw.remove(discarded)
+        self.deck.discard.append(discarded)
+
+        await self.announcement_channel.send(f"The following card was played!\n\n[{str(played_card)}]\n\n\nThere are {len(self.deck.draw)} cards left in the deck.")
+        if not played_card.is_ethereal and not played_card.is_rats:
+            self.deck.discard.append(played_card)
+        
+        if played_card.is_rats:
+            index = random.randint(0, len(self.deck.draw) - 1)
+            self.deck.draw.insert(index, played_card)
+
+        await self.promptModerator()
+
     async def Manipulate(self, amount: int):
         dracula = discord.utils.find( lambda p: p.is_dracula, self.players )
         for index in range(amount):
-            card = self.deck.draw[0]
-            await dracula.send(f"You are manipulating the deck. You see the following card {'first' if index == 0 else 'second'}:\n\n[{card}]\n\n\n`Keep`, `bury`, or `Charm!`?", view=Manipulate(index, game=self))
+            card = self.deck.draw[index]
+            await dracula.send(f"You are manipulating the deck. You see the following card {'first' if index == 0 else 'second'}:\n\n[{card}]\n\n\n`Keep`, `bury`, or `Charm!`?", view=Manipulate(card, game=self))
     
-    async def ManipulateResponse(self, action: str, index: int):
+    async def ManipulateResponse(self, action: str, card):
         if action == "Keep":
-            await self.moderator.send(f"Dracula kept the {'first' if index == 0 else 'second'} card!")
+            await self.moderator.send(f"Dracula kept the card!")
         elif action == "Bury":
-            card = self.deck.draw.pop(index)
+            self.deck.draw.remove(card)
             self.deck.draw.append(card)
-            await self.moderator.send(f"Dracula buried the {'first' if index == 0 else 'second'} card!")
+            await self.moderator.send(f"Dracula buried the card!")
         elif action == "Charm!":
             self.has_charm = False
             self.charm_next_human = True
-            await self.moderator.send(f"Dracula Charmed! the {'first' if index == 0 else 'second'} card!")
+            await self.moderator.send(f"Dracula Charmed! the card!")
 
         await self.promptModerator()

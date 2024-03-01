@@ -6,5 +6,8 @@ class Dracula(Vampire):
         self.is_dracula = True
 
     def parseCardAsAuthor(self, card, is_blind=False) -> str:
-        message = "Dracula sees all: " + str(card)
+        message = str(card)
         return message
+
+    def parseCardAsNarrator(self, card, is_blind=False) -> str:
+        return str(card)

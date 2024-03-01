@@ -9,6 +9,7 @@ class Card:
         self.boon: str = None
         self.is_luck = is_luck
         self.is_ethereal = False
+        self.is_always_visible = False
         self.is_rats = False
 
     def applyBane(self):

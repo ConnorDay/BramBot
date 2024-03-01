@@ -9,6 +9,23 @@ class Player():
     async def send(self, message, view=None) -> None:
         message = f"Player {self.id}:\n" + message
         await self.user.send(message, view=view)
+
+    def parseCardAsNarrator(self, card, is_blind=False) -> str:
+        message = ""
+        if card.is_luck:
+            message += "Luck"
+        else:
+            message += "Curse"
+        
+        if is_blind and not card.is_always_visible:
+            return message
+
+        if card.boon:
+            message += f" Boon: {card.boon}"
+        elif card.bane:
+            message += f" Bane: {card.bane}"
+
+        return message
     
     def parseCardAsAuthor(self, card, is_blind=False) -> str:
         message = ""

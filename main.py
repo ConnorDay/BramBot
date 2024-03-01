@@ -37,7 +37,8 @@ async def on_message(message):
             for mention in args:
                 match = re.match(r"<@!?(\d+)>", mention)
                 if not match:
-                    message.channel.send(f"Could not parse: {mention}")
+                    game.players = []
+                    await message.channel.send(f"Could not parse: {mention}")
                     return
                 
                 id = int(match[1])
