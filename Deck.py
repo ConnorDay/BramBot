@@ -22,6 +22,16 @@ class Deck:
         self.draw = [ ethereal ]
         self.has_shuffled = False
 
+        self.banes = []
+        self.boons = []
+
+    def addBane(self, card: Card):
+        self.draw.append(card)
+        self.banes.append(card)
+    def addBoon(self, card: Card):
+        self.draw.append(card)
+        self.boons.append(card)
+
     def create(self):
         Card.banes = Deck.banes.copy()
         Card.boons = Deck.boons.copy()
@@ -31,16 +41,16 @@ class Deck:
 
             luck_bane = Card(is_luck=True)
             luck_bane.applyBane()
-            self.draw.append(luck_bane)
+            self.addBane(luck_bane)
 
             if i != 0:
                 curse_boon = Card(is_luck=False)
                 curse_boon.applyBoon()
-                self.draw.append(curse_boon)
+                self.addBoon(curse_boon)
         
         curse_bane = Card(is_luck=False)
         curse_bane.applyBane()
-        self.draw.append(curse_bane)
+        self.addBane(curse_bane)
 
         rats = Card(is_luck=False)
         rats.is_rats = True
@@ -49,5 +59,19 @@ class Deck:
 
         random.shuffle(self.draw)
 
-    def shuffle():
-        pass
+    def shuffle(self):
+        if not self.has_shuffled:
+            Card.required_boons.append("Players **vote to choose** next Author, after which Authorship is restored to the player who should have been next.")
+            self.has_shuffled = True
+
+        Card.banes = Deck.banes.copy()
+        for card in self.banes:
+            card.applyBane()
+
+        Card.boons = Deck.boons.copy()
+        for card in self.boons:
+            card.applyBoon()
+        
+        self.draw.extend(self.discard)
+        self.discard = []
+        random.shuffle(self.draw)

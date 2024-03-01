@@ -130,6 +130,10 @@ class Game:
             index = random.randint(0, len(self.deck.draw) - 1)
             self.deck.draw.insert(index, played_card)
 
+        if len(self.deck.draw) < 3:
+            self.deck.shuffle()
+            await self.announcement_channel.send("The deck has been shuffled.")
+
         await self.promptModerator()
 
     async def Manipulate(self, amount: int):
