@@ -5,6 +5,7 @@ from ModeratorViews.Manipulate import Manipulate
 from ModeratorViews.Narrator import Narrator
 from ModeratorViews.Bite import Bite
 from ModeratorViews.Cure import Cure
+from ModeratorViews.AddCard import AddCard
 
 class Moderator(View):
     def __init__(self, *, game = None):
@@ -27,6 +28,8 @@ class Moderator(View):
             view = Bite(game=self.game)
         elif command == "Cure":
             view = Cure(game=self.game)
+        elif command == "Add Card":
+            view = AddCard(game=self.game)
 
         if view != None:
             await interaction.response.send_message(view.message, view=view)
@@ -53,6 +56,10 @@ class Moderator(View):
         discord.SelectOption(
             label="Cure",
             description="Turn the selected player into a Human. Will reveal to the chat."
+        ),
+        discord.SelectOption(
+            label="Add Card",
+            description="Add a card to the deck"
         ),
         discord.SelectOption(
             label="Stop Game",

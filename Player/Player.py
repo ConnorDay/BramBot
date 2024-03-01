@@ -25,6 +25,11 @@ class Player():
         elif card.bane:
             message += f" Bane: {card.bane}"
 
+        if card.is_cure:
+            message += " (Cure!)"
+        elif card.is_bite:
+            message += " (Bite!)"
+
         return message
     
     def parseCardAsAuthor(self, card, is_blind=False) -> str:
@@ -41,5 +46,10 @@ class Player():
             message += " (Boon)"
         elif card.bane:
             message += " (Bane)"
+
+        if card.is_cure:
+            message += " (Cure!)"
+        elif card.is_bite:
+            message += " (Bite!)"
 
         return message

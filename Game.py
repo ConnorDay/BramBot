@@ -5,6 +5,7 @@ from Player.Player import Player
 from Player.Renfield import Renfield
 from Player.Vampire import Vampire
 from Deck import Deck
+from Card.Card import Card
 from ModeratorViews.Moderator import Moderator
 from PlayerViews.Manipulate import Manipulate
 from PlayerViews.Narrator import Narrator
@@ -94,6 +95,8 @@ class Game:
 
         top_card = self.deck.draw[0]
         await player.send(f"You have been selected as an Author!\nThis is the top card: [{player.parseCardAsAuthor(top_card)}]")
+        
+        await self.promptModerator()
 
     async def Narrator(self, player_id: int, is_blind):
         player: Player = discord.utils.find( lambda p: p.id == player_id, self.players)
@@ -173,6 +176,28 @@ class Game:
             await self.announcement_channel.send(f"{player.user.display_name} was successfully Cured!")
         else:
             await self.announcement_channel.send(f"{player.user.display_name} was not Cured!")
+
+        await self.promptModerator()
+    
+    async def AddCard(self, type: str):
+        if type == "Bite!":
+            bite = Card(True)
+            bite.is_bite = True
+            bite.is_ethereal = True
+            index = random.randint(1, len(self.deck.draw)-1)
+            self.deck.draw.insert(index, bite)
+        elif type == "Cure!":
+            cure = Card(True)
+            cure.is_cure = True
+            cure.is_ethereal = True
+            index = random.randint(1, len(self.deck.draw)-1)
+            self.deck.draw.insert(index, cure)
+        else:
+            bitc = Card(True)
+            bitc.bane = "*Break in the Clouds* Destroy this card after it's played."
+            bitc.is_ethereal = True
+            index = random.randint(0, len(self.deck.draw)-1)
+            self.deck.draw.insert(index, bitc)
 
         await self.promptModerator()
 

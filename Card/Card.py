@@ -11,6 +11,8 @@ class Card:
         self.is_ethereal = False
         self.is_always_visible = False
         self.is_rats = False
+        self.is_cure = False
+        self.is_bite = False
 
     def applyBane(self):
         self.bane = random.choice(Card.banes)
@@ -35,6 +37,11 @@ class Card:
             result += f" Bane: '{self.bane}'"
         elif self.boon != None:
             result += f" Boon: '{self.boon}'"
+
+        if self.is_cure:
+            result += " (Cure!)"
+        elif self.is_bite:
+            result += " (Bite!)"
 
         if self.is_rats:
             result += " Bane: 'Plague of Rats!'"
