@@ -151,3 +151,11 @@ class Game:
             await self.moderator.send(f"Dracula Charmed! the card!")
 
         await self.promptModerator()
+    
+    async def Bite(self, player_id: int):
+        player: Player = discord.utils.find( lambda p: p.id == player_id, self.players)
+        self.players.remove(player)
+
+        self.players.insert(player.id - 1, Vampire(player.user, player.id))
+
+        await self.promptModerator()

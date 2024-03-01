@@ -3,6 +3,7 @@ from View import View
 from ModeratorViews.Author import Author
 from ModeratorViews.Manipulate import Manipulate
 from ModeratorViews.Narrator import Narrator
+from ModeratorViews.Bite import Bite
 
 class Moderator(View):
     def __init__(self, *, game = None):
@@ -21,6 +22,8 @@ class Moderator(View):
             view = Manipulate(game=self.game)
         elif command == "Narrator":
             view = Narrator(game=self.game)
+        elif command == "Bite":
+            view = Bite(game=self.game)
 
         if view != None:
             await interaction.response.send_message(view.message, view=view)
