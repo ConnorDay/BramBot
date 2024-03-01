@@ -45,14 +45,9 @@ class Deck:
         rats = Card(is_luck=False)
         rats.is_rats = True
 
-        self.draw.append(curse_bane)
+        self.draw.append(rats)
 
         random.shuffle(self.draw)
-        for card in self.draw:
-            print(card)
 
     def shuffle():
-        pass
-
-    def draw():
         pass

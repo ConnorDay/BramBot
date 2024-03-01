@@ -26,16 +26,16 @@ class Card:
     def __str__(self) -> str:
         result = ""
         if self.is_luck:
-            result += "L"
+            result += "Luck"
         else:
-            result += "C"
+            result += "Curse"
         
         if self.bane != None:
-            result += f"- {self.bane}"
+            result += f" Bane: '{self.bane}'"
         elif self.boon != None:
-            result += f"+ {self.boon}"
+            result += f" Boon: '{self.boon}'"
 
         if self.is_rats:
-            result += " (rats)"
+            result += " Bane: 'Plague of Rats!'"
         
         return result

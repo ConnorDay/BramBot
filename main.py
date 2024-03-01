@@ -2,6 +2,7 @@ import discord
 import re
 from dotenv import dotenv_values
 from Game import Game
+from ModeratorViews.Moderator import Moderator
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -33,7 +34,6 @@ async def on_message(message):
                 message.channel.send("Game already started")
                 return
 
-            users = []
             for mention in args:
                 match = re.match(r"<@!?(\d+)>", mention)
                 if not match:
@@ -44,12 +44,12 @@ async def on_message(message):
                 user = discord.utils.find( lambda u: u.id == id, message.mentions)
                 await game.addPlayer(user)
 
-            await game.start(message.author)
+            await game.start(message.author, message.channel)
 
 
 
     elif message.channel.type == discord.ChannelType.private:
-        print(args)
+        await message.channel.send("fegli")
 
 config = dotenv_values(".env")
 client.run(config["TOKEN"])
