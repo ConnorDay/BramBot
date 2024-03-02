@@ -2,6 +2,8 @@ BramBot is a Discord bot designed to help manage the deck for the game BloodMoon
 
 
 ## Installation guide:
+Create a .env file that has the field: `TOKEN=<discord token>`
+
 ### No Docker
 This bot was programmed and tested using python 3.10.4
 Run `py main.py`

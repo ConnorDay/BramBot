@@ -130,6 +130,7 @@ class Game:
                     self.charm_next_human = False
                     self.has_charm = True
 
+        await self.announcement_channel.send(f"{player.user.display_name} has been selected as the narrator!")
         await player.send(f"You have been selected as the Narrator!\nThis is the first card (what the Author saw):\n\n[{first_card_string}]\n\nThis is the second card (no one has seen this):\n\n[{second_card_string}]\n\n\n{'You are Charmed! you must choose the first card.' if charmed else 'Choose which card to play!'}", view=Narrator(first_card, second_card, charmed=charmed, game=self))
 
     async def NarratorResponse(self, played_card=None, discarded=None):
